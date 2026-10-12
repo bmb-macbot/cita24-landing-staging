@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cita24 · Recepcionista con IA para clínicas: que ninguna llamada se quede sin cita</title>
+<meta name="description" content="María, la recepcionista con IA de Cita24, contesta por WhatsApp y en tu web a cualquier hora, busca hueco en tu agenda y escribe en 60 segundos a quien llamó y no le cogisteis. 250 € de alta con el primer mes incluido, después 90 €/mes, sin permanencia.">
+<link rel="canonical" href="https://cita24.tech/">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:url" content="https://cita24.tech/">
+<meta property="og:title" content="Cita24 · Que ninguna llamada de tu clínica se quede sin cita">
+<meta property="og:description" content="Recepcionista con IA para clínicas dentales, de fisioterapia y podología. Pruébala en vivo y calcula lo que pierdes al mes.">
+<meta property="og:image" content="https://cita24.tech/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#f6f3ec">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Cita24 — Recepcionista con IA para clínicas",
+  "serviceType": "Recepcionista virtual con inteligencia artificial",
+  "areaServed": "ES",
+  "url": "https://cita24.tech/",
+  "offers": [
+    {"@type": "Offer", "name": "Alta (primer mes incluido)", "price": "250", "priceCurrency": "EUR"},
+    {"@type": "Offer", "name": "Cuota mensual sin permanencia", "price": "90", "priceCurrency": "EUR"}
+  ]
+}
+</script>
+<style>
+/* Ancla del diseño: papel cálido de recepción + un panel de tinta para los números.
+   Teal de la marca Cita24, en dos tonos: oscuro para texto sobre papel (contraste AA),
+   brillante solo sobre tinta. Un único efecto protagonista: la cifra de la calculadora. */
+:root{
+  --papel:#f6f3ec; --papel-2:#efeadf; --linea:#ddd5c4;
+  --tinta:#17262a; --tinta-2:#22363b; --gris:#56676a; --gris-claro:#9fb0b2;
+  --teal:#0e6f67; --teal-claro:#2dd4bf; --teal-suave:#d7efe9;
+  --fuga:#b8461b;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Charter","Georgia",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.23,1,.32,1);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--papel);color:var(--tinta);font:17px/1.6 var(--sans)}
+a{color:var(--teal)}
+img,svg{display:block}
+.envoltura{max-width:1120px;margin:0 auto;padding:0 20px}
+.salto{position:absolute;left:-999px;top:0;background:var(--tinta);color:#fff;padding:10px 14px;z-index:20}
+.salto:focus{left:8px;top:8px}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px;border-radius:4px}
+
+/* Cabecera */
+.cabecera{position:sticky;top:0;z-index:10;background:rgba(246,243,236,.94);border-bottom:1px solid var(--linea)}
+.cabecera .envoltura{display:flex;align-items:center;gap:20px;height:64px}
+.marca{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:800;font-size:19px;color:var(--tinta);text-decoration:none;letter-spacing:-.01em}
+.marca span.punto{color:var(--teal)}
+.nav{display:none;gap:22px;margin-left:auto}
+.nav a{color:var(--gris);text-decoration:none;font-size:15px}
+.nav a:hover{color:var(--tinta)}
+.cabecera .boton{margin-left:auto;padding:10px 16px;font-size:15px;min-height:44px}
+@media (min-width:860px){.nav{display:flex}.cabecera .boton{margin-left:8px}}
+
+/* Botones */
+.boton{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:14px 22px;border-radius:10px;
+  font:700 17px/1.2 var(--sans);text-decoration:none;border:2px solid var(--tinta);background:var(--tinta);color:#fff;cursor:pointer;
+  transition:transform .16s var(--ease),background-color .16s var(--ease)}
+.boton:active{transform:scale(.98)}
+.boton.claro{background:transparent;color:var(--tinta)}
+.boton.teal{background:var(--teal-claro);border-color:var(--teal-claro);color:var(--tinta)}
+@media (hover:hover) and (pointer:fine){.boton:hover{background:var(--tinta-2)}.boton.claro:hover{background:var(--papel-2)}.boton.teal:hover{background:#5eead4}}
+
+/* Héroe: promesa a la izquierda, la propia María a la derecha */
+.heroe{padding:40px 0 56px}
+.heroe .envoltura{display:grid;gap:36px}
+@media (min-width:960px){.heroe{padding:72px 0 88px}.heroe .envoltura{grid-template-columns:1.05fr .95fr;align-items:start;gap:56px}}
+.antetitulo{font:600 14px/1.4 var(--sans);letter-spacing:.07em;text-transform:uppercase;color:var(--teal);margin:0 0 14px}
+h1{font:400 clamp(38px,6.2vw,66px)/1.02 var(--serif);letter-spacing:-.025em;margin:0 0 20px}
+h1 em{font-style:italic;color:var(--teal)}
+.entradilla{font-size:19px;color:var(--gris);max-width:34em;margin:0 0 28px}
+.entradilla strong{color:var(--tinta)}
+.acciones{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px}
+.precio-linea{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;color:var(--gris);padding-top:18px;border-top:1px solid var(--linea);max-width:34em}
+.precio-linea b{color:var(--tinta);font-variant-numeric:tabular-nums}
+
+/* Chat de María */
+.chat{background:#fff;border:1px solid var(--linea);border-radius:18px;box-shadow:0 1px 0 var(--linea),0 24px 48px -28px rgba(23,38,42,.35);overflow:hidden;display:flex;flex-direction:column}
+.chat-cab{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--linea);background:var(--papel)}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--tinta);color:var(--teal-claro);display:grid;place-items:center;font:400 20px var(--serif)}
+.chat-cab b{display:block;font-size:16px}
+.chat-cab small{color:var(--gris);font-size:14px}
+.estado{display:inline-block;width:8px;height:8px;border-radius:50%;background:#16a34a;margin-right:6px;vertical-align:1px}
+.estado.off{background:#a8a29e}
+.mensajes{height:340px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#fbfaf7}
+.msg{max-width:84%;padding:10px 14px;border-radius:14px;font-size:16px;line-height:1.45;white-space:pre-wrap}
+.msg.maria{background:#fff;border:1px solid var(--linea);border-bottom-left-radius:4px;align-self:flex-start}
+.msg.paciente{background:var(--teal-suave);border-bottom-right-radius:4px;align-self:flex-end}
+.msg.nota{align-self:center;background:none;color:var(--gris);font-size:14px;text-align:center;padding:2px 8px}
+.msg.escribiendo{color:var(--gris);font-style:italic}
+.escenarios{display:flex;gap:8px;overflow-x:auto;padding:12px 16px 4px;scrollbar-width:none}
+.escenarios::-webkit-scrollbar{display:none}
+.escenarios button{flex:none;min-height:44px;padding:8px 14px;border-radius:999px;border:1px solid var(--linea);background:var(--papel);font:600 15px var(--sans);color:var(--tinta);cursor:pointer}
+.escenarios button:active{transform:scale(.97)}
+.chat form{display:flex;gap:8px;padding:12px 16px 14px}
+.chat input{flex:1;min-width:0;min-height:48px;padding:10px 14px;border:1px solid var(--linea);border-radius:10px;font:16px var(--sans);background:#fff;color:var(--tinta)}
+.chat form .boton{min-height:48px;padding:10px 16px}
+.chat button:disabled{opacity:.55;cursor:default}
+.chat-aviso{margin:0;padding:10px 16px 14px;font-size:14px;line-height:1.45;color:var(--gris);border-top:1px solid var(--linea);background:var(--papel)}
+.chat-pie{display:flex;justify-content:space-between;gap:12px;padding:0 16px 12px;font-size:14px;color:var(--gris)}
+.chat-pie b{color:var(--tinta);font-variant-numeric:tabular-nums}
+
+/* Secciones: ritmo desigual a propósito */
+section,#maria{scroll-margin-top:76px}
+.bloque{padding:72px 0}
+.bloque.denso{padding:44px 0}
+h2{font:400 clamp(30px,4.4vw,46px)/1.08 var(--serif);letter-spacing:-.02em;margin:0 0 16px}
+.bloque p.lead{font-size:18.5px;color:var(--gris);max-width:38em;margin:0 0 32px}
+
+/* Problema: una frase, sin tarjetas */
+.problema{background:var(--papel-2);border-top:1px solid var(--linea);border-bottom:1px solid var(--linea)}
+.problema ol{list-style:none;margin:0;padding:0;display:grid;gap:0;counter-reset:p}
+.problema li{display:grid;grid-template-columns:56px 1fr;gap:6px 14px;padding:18px 0;border-top:1px solid var(--linea)}
+.problema li:first-child{border-top:0}
+.problema li::before{counter-increment:p;content:"0" counter(p);font:400 28px/1 var(--serif);color:var(--teal);grid-row:span 2}
+.problema li b{font-size:18px}
+.problema li span{color:var(--gris)}
+@media (min-width:860px){.problema .envoltura{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}}
+
+/* Calculadora: el panel de tinta */
+.calculadora{background:var(--tinta);color:#eef3f2}
+.calculadora h2{color:#fff}
+.calculadora .lead{color:var(--gris-claro)!important}
+.calc{display:grid;gap:28px}
+@media (min-width:960px){.calc{grid-template-columns:1fr 1fr;gap:56px;align-items:start}}
+.campo{padding:20px 0;border-top:1px solid rgba(255,255,255,.12)}
+.campo:first-child{border-top:0;padding-top:0}
+.campo label{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-weight:600;font-size:16.5px;margin-bottom:12px}
+.campo label output,.campo .valor{font:400 30px/1 var(--serif);color:var(--teal-claro);font-variant-numeric:tabular-nums;white-space:nowrap}
+.campo .ayuda{font-size:14.5px;color:var(--gris-claro);margin:10px 0 0}
+.fila-rango{display:flex;align-items:center;gap:14px}
+.fila-rango input[type=number]{width:92px;min-height:44px;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.22);background:var(--tinta-2);color:#fff;font:600 17px var(--sans);text-align:right}
+input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:44px;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(to right,var(--teal-claro) var(--p,50%),rgba(255,255,255,.18) var(--p,50%))}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:rgba(255,255,255,.18)}
+input[type=range]::-moz-range-progress{height:6px;border-radius:3px;background:var(--teal-claro)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;margin-top:-10px;border-radius:50%;background:#fff;border:3px solid var(--teal-claro)}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--teal-claro)}
+.resultado{background:#fff;color:var(--tinta);border-radius:16px;padding:28px 24px}
+.resultado .etiqueta{font:600 14px/1.4 var(--sans);letter-spacing:.07em;text-transform:uppercase;color:var(--gris);margin:0}
+.cifra{font:400 clamp(56px,10vw,84px)/1 var(--serif);letter-spacing:-.03em;color:var(--tinta);margin:8px 0 4px;font-variant-numeric:tabular-nums;display:inline-block}
+.cifra.late{animation:late .32s var(--ease)}
+@keyframes late{from{transform:translateY(3px);opacity:.55}to{transform:none;opacity:1}}
+.anual{color:var(--gris);margin:0 0 20px}
+.anual b{color:var(--tinta);font-variant-numeric:tabular-nums}
+.equilibrio{border-top:1px solid var(--linea);padding-top:18px;margin:0 0 20px;font-size:17px}
+.equilibrio b{font-variant-numeric:tabular-nums}
+.resultado .boton{width:100%}
+.resultado .boton + .boton{margin-top:10px}
+details.formula{margin-top:18px;font-size:14.5px;color:var(--gris)}
+details.formula summary{cursor:pointer;font-weight:600;color:var(--tinta);min-height:44px;display:flex;align-items:center}
+details.formula p{margin:6px 0}
+@media (prefers-reduced-motion:reduce){.cifra.late{animation:none}}
+
+.ayuda-priv{margin:0;font-size:14px;color:var(--gris)}.ayuda-priv a{color:var(--teal)}
+.mini{display:none}
+@media (max-width:959px){.mini{display:block;position:sticky;top:64px;z-index:5;margin:0;padding:10px 14px;border-radius:10px;background:#fff;color:var(--tinta);font-size:15px;box-shadow:0 4px 14px rgba(0,0,0,.25)}.mini b{font-variant-numeric:tabular-nums}}
+.campo select{width:100%;min-height:48px;padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.22);background:var(--tinta-2);color:#fff;font:600 16.5px var(--sans)}
+.sup{color:var(--teal-claro);font-weight:600}
+details.avanzado{border-top:1px solid rgba(255,255,255,.12);padding-top:6px}
+details.avanzado>summary{cursor:pointer;font-weight:600;min-height:48px;display:flex;align-items:center;color:var(--teal-claro)}
+.desglose{list-style:none;margin:0 0 18px;padding:0;border-top:1px solid var(--linea)}
+.desglose li{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--linea)}
+.desglose b{font-variant-numeric:tabular-nums}
+.recupera{background:var(--papel-2);border-radius:12px;padding:16px;margin:0 0 20px}
+.cifra-2{font:400 44px/1 var(--serif);color:var(--teal);margin:6px 0 2px;font-variant-numeric:tabular-nums}
+form.informe{margin-top:14px;display:grid;gap:12px}
+form.informe[hidden]{display:none}
+form.informe label{display:block;font-weight:600;font-size:15px;margin-bottom:4px}
+form.informe input{width:100%;min-height:48px;padding:10px 12px;border-radius:8px;border:1px solid var(--linea);font:16px var(--sans)}
+form.informe .trampa{position:absolute;left:-9999px}
+form.informe .respuesta{margin:0;font-size:15px}
+form.informe .respuesta.ok{color:var(--teal)}form.informe .respuesta.error{color:var(--fuga)}
+details.fuentes ul{padding-left:18px;margin:6px 0}
+details.fuentes li{margin:8px 0}
+details.fuentes a{color:var(--teal)}
+
+/* Cómo funciona: línea de tiempo, no tres tarjetas */
+.pasos{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.pasos li{display:grid;grid-template-columns:auto 1fr;gap:4px 18px;padding:22px 0;border-top:1px solid var(--linea)}
+.pasos .cuando{font:600 14px/1.5 var(--mono);color:var(--teal);grid-row:span 2;min-width:88px;padding-top:3px}
+.pasos b{font-size:19px}
+.pasos span{color:var(--gris)}
+@media (min-width:860px){.como .envoltura{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px}}
+
+/* Lo que hace y lo que no */
+.dos{display:grid;gap:20px}
+@media (min-width:860px){.dos{grid-template-columns:1.25fr 1fr;gap:28px}}
+.lista{list-style:none;margin:0;padding:0}
+.lista li{padding:12px 0 12px 30px;border-top:1px solid var(--linea);position:relative}
+.lista li::before{content:"";position:absolute;left:4px;top:21px;width:12px;height:7px;border-left:2.5px solid var(--teal);border-bottom:2.5px solid var(--teal);transform:rotate(-45deg)}
+.lista.no li::before{width:14px;height:0;border-left:0;border-bottom:2.5px solid var(--fuga);transform:none;top:24px}
+.caja{background:#fff;border:1px solid var(--linea);border-radius:14px;padding:24px}
+.caja h3{font:400 24px/1.2 var(--serif);margin:0 0 8px}
+.caja p{color:var(--gris);margin:0 0 6px}
+.especialidades{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0;padding:0;list-style:none}
+.especialidades li{padding:6px 12px;border:1px solid var(--linea);border-radius:999px;font-size:15px;background:var(--papel)}
+
+/* Precio */
+.precio{background:var(--papel-2);border-top:1px solid var(--linea);border-bottom:1px solid var(--linea)}
+.tarifa{display:grid;gap:24px;background:#fff;border:1px solid var(--linea);border-radius:20px;padding:28px 24px}
+@media (min-width:860px){.tarifa{grid-template-columns:1fr 1fr;padding:40px;gap:48px}}
+.importe{font:400 64px/1 var(--serif);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.importe small{font:500 18px var(--sans);color:var(--gris);letter-spacing:0}
+.importe-2{font-size:19px;margin:10px 0 18px}
+.garantia{border-left:3px solid var(--teal);padding:4px 0 4px 16px;margin:0 0 20px}
+.garantia b{display:block}
+.tarifa .boton{width:100%}
+.letra{font-size:14px;color:var(--gris);margin:12px 0 0}
+
+/* Comprobable */
+.comprobable{display:grid;gap:0;margin:0;padding:0;list-style:none}
+@media (min-width:860px){.comprobable{grid-template-columns:repeat(2,1fr);column-gap:48px}}
+.comprobable li{padding:18px 0;border-top:1px solid var(--linea)}
+.comprobable b{display:block;font-size:18px;margin-bottom:2px}
+.comprobable span{color:var(--gris)}
+.directo{font-variant-numeric:tabular-nums;color:var(--teal);font-weight:700}
+
+/* Formulario */
+.formulario{display:grid;gap:14px;max-width:640px}
+@media (min-width:640px){.formulario .par{display:grid;grid-template-columns:1fr 1fr;gap:14px}}
+.formulario label{display:block;font-weight:600;font-size:15.5px;margin-bottom:6px}
+.formulario input,.formulario textarea{width:100%;min-height:50px;padding:12px 14px;border:1px solid #cfc6b3;border-radius:10px;font:16px var(--sans);background:#fff;color:var(--tinta)}
+.formulario textarea{min-height:96px;resize:vertical}
+.trampa{position:absolute;left:-9999px}
+.respuesta{min-height:1.6em;margin:0;font-weight:600}
+.respuesta.ok{color:var(--teal)} .respuesta.error{color:var(--fuga)}
+
+/* Preguntas */
+.preguntas details{border-top:1px solid var(--linea);padding:4px 0}
+.preguntas details:last-child{border-bottom:1px solid var(--linea)}
+.preguntas summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px;align-items:center;min-height:56px;font-weight:600;font-size:18px}
+.preguntas summary::-webkit-details-marker{display:none}
+.preguntas summary::after{content:"+";font:400 26px/1 var(--serif);color:var(--teal);transition:transform .2s var(--ease)}
+.preguntas details[open] summary::after{transform:rotate(45deg)}
+.preguntas details p{color:var(--gris);margin:0 0 16px;max-width:42em}
+
+/* Cierre y pie */
+.cierre{background:var(--tinta);color:#fff;text-align:left}
+.cierre h2{color:#fff;max-width:16em}
+.cierre p{color:var(--gris-claro);max-width:34em}
+.cierre .boton.claro{color:#fff;border-color:rgba(255,255,255,.5)}
+@media (hover:hover) and (pointer:fine){.cierre .boton.claro:hover{background:var(--tinta-2)}}
+.pie{padding:32px 0 96px;font-size:14.5px;color:var(--gris)}
+.pie nav{display:flex;flex-wrap:wrap;gap:0 18px;margin-bottom:10px}
+.pie nav a{display:inline-flex;align-items:center;min-height:44px}
+@media (min-width:860px){.pie{padding-bottom:32px}}
+
+/* Barra fija en móvil: la acción siempre a un pulgar */
+.barra{position:fixed;left:0;right:0;bottom:0;z-index:9;display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(246,243,236,.97);border-top:1px solid var(--linea)}
+.barra .boton{flex:1;min-height:48px;padding:10px 12px;font-size:16px}
+@media (min-width:860px){.barra{display:none}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<a class="salto" href="#contenido">Saltar al contenido</a>
+
+<header class="cabecera">
+  <div class="envoltura">
+    <a class="marca" href="#" aria-label="Cita24, inicio">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect x="1" y="1" width="28" height="28" rx="7" fill="#17262a"/><path d="M19.5 10.2a6.2 6.2 0 1 0 0 9.6" fill="none" stroke="#2dd4bf" stroke-width="2.6" stroke-linecap="round"/></svg>
+      <span>Cita<span class="punto">24</span></span>
+    </a>
+    <nav class="nav" aria-label="Secciones">
+      <a href="#calculadora">Calculadora</a>
+      <a href="#como">Cómo funciona</a>
+      <a href="#precio">Precio</a>
+      <a href="#preguntas">Preguntas</a>
+    </nav>
+    <a class="boton" href="#maria">Probar a María</a>
+  </div>
+</header>
+
+<main id="contenido">
+
+<section class="heroe" aria-labelledby="titulo">
+  <div class="envoltura">
+    <div>
+      <p class="antetitulo">Recepcionista con IA · clínicas dentales, de fisioterapia y podología</p>
+      <h1 id="titulo">Cada llamada que no coges es una cita que se va <em>a otra clínica</em>.</h1>
+      <p class="entradilla">María contesta por <strong>WhatsApp y en tu web a cualquier hora</strong>, busca hueco en tu agenda, confirma y cambia citas, y escribe <strong>en 60 segundos</strong> a quien llamó y no le cogiste. Sin tocar el historial clínico.</p>
+      <div class="acciones">
+        <a class="boton" href="#maria">Hablar con María ahora</a>
+        <a class="boton claro" href="#calculadora">Calcular lo que pierdo</a>
+      </div>
+      <p class="precio-linea"><span>Alta <b>250 €</b> con el primer mes incluido</span><span>Después <b>90 €/mes</b></span><span>Sin permanencia</span></p>
+    </div>
+
+    <div id="maria" class="chat" aria-label="Demo en vivo de María, la recepcionista de Cita24">
+      <div class="chat-cab">
+        <div class="avatar" aria-hidden="true">M</div>
+        <div><b>María · recepcionista de Cita24</b><small><span class="estado" id="estado"></span><span id="estado-texto">Demo en vivo</span></small></div>
+      </div>
+      <div class="mensajes" id="mensajes" role="log" aria-live="polite">
+        <div class="msg maria">Hola, soy María. Escríbeme como si fueras un paciente: pídeme cita, cámbiala o pregúntame lo que te preguntan a ti cada día.</div>
+      </div>
+      <div class="escenarios" id="escenarios" aria-label="Escenarios de prueba">
+        <button type="button" data-texto="Hola, me duele mucho la muela, ¿tenéis hueco esta semana?">Dolor de muela</button>
+        <button type="button" data-texto="Tenía cita el jueves a las 10 y no puedo ir, ¿la podemos cambiar?">Cambiar una cita</button>
+        <button type="button" data-texto="¿Cuánto cuesta una primera visita?">Pregunta el precio</button>
+        <button type="button" data-texto="Quiero cancelar mi cita de mañana.">Cancelar</button>
+        <button type="button" data-texto="¿Eres una persona o un robot?">¿Eres un robot?</button>
+      </div>
+      <form id="chat-form" autocomplete="off">
+        <label class="salto" for="chat-entrada">Tu mensaje</label>
+        <input id="chat-entrada" type="text" maxlength="500" placeholder="Escribe como paciente…">
+        <button class="boton" type="submit">Enviar</button>
+      </form>
+      <div class="chat-pie"><span>Demos hoy: <b id="demos-hoy">—</b></span><span>Última respuesta: <b id="tiempo">—</b></span></div>
+      <p class="chat-aviso">Es una demo, no una consulta real. Tu mensaje pasa por un proveedor de IA en Estados Unidos: no escribas datos de salud ni datos personales. <a href="/legal/privacidad.html">Privacidad</a>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="problema bloque denso" aria-labelledby="t-problema">
+  <div class="envoltura">
+    <h2 id="t-problema">El paciente no deja mensaje. Llama a la siguiente.</h2>
+    <ol>
+      <li><b>Llama fuera de horario o mientras atiendes.</b><span>Nadie coge el teléfono y el WhatsApp se queda sin contestar hasta mañana.</span></li>
+      <li><b>No vuelve a intentarlo.</b><span>Busca otra clínica que sí responda y pide allí la cita.</span></li>
+      <li><b>Ese hueco se queda vacío en tu agenda.</b><span>Y no aparece en ningún informe: no sabes cuántas veces pasa.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section id="calculadora" class="calculadora bloque" aria-labelledby="t-calc">
+  <div class="envoltura">
+    <p class="antetitulo" style="color:var(--teal-claro)">Con tus números, no con los nuestros</p>
+    <h2 id="t-calc">¿Cuánto dinero pierde tu clínica por no atender a tiempo?</h2>
+    <p class="lead">Los valores de partida son supuestos prudentes: ajústalos a tu clínica. Cada uno lleva debajo de dónde sale. Nada de lo que escribes sale de esta página, salvo que pidas el informe.</p>
+    <div class="calc">
+      <p class="mini" aria-hidden="true">Estimación: pierdes <b id="mini-cifra">0 €</b> al mes · recuperable <b id="mini-rec">0 €</b></p>
+      <div>
+        <div class="campo">
+          <label for="r-contactos">Llamadas y mensajes de pacientes a la semana <output id="o-contactos" for="r-contactos">30</output></label>
+          <div class="fila-rango"><input type="range" id="r-contactos" min="0" max="200" step="1" value="30"><input type="number" id="n-contactos" min="0" max="2000" step="1" value="30" aria-label="Llamadas y mensajes a la semana"></div>
+          <p class="ayuda"><span class="sup">Supuesto, ajústalo.</span> Cuéntalos en el registro de llamadas y en el correo de una semana normal.</p>
+        </div>
+        <div class="campo">
+          <label for="r-nocogidos">De esos, cuántos no se atienden <output id="o-nocogidos" for="r-nocogidos">25 %</output></label>
+          <div class="fila-rango"><input type="range" id="r-nocogidos" min="0" max="100" step="1" value="25"><input type="number" id="n-nocogidos" min="0" max="100" step="1" value="25" aria-label="Porcentaje de contactos que no se atienden"></div>
+          <p class="ayuda"><span class="sup">Supuesto prudente.</span> Fuera de horario, comunicando o con el teléfono sonando mientras estás en consulta. Tu registro de llamadas perdidas te da el dato real.</p>
+        </div>
+        <div class="campo">
+          <label for="r-cita">Cuántos de esos contactos eran una cita nueva <output id="o-cita" for="r-cita">40 %</output></label>
+          <div class="fila-rango"><input type="range" id="r-cita" min="0" max="100" step="1" value="40"><input type="number" id="n-cita" min="0" max="100" step="1" value="40" aria-label="Porcentaje de contactos que eran una cita nueva"></div>
+          <p class="ayuda"><span class="sup">Supuesto prudente.</span> El resto son consultas, cambios de cita o proveedores.</p>
+        </div>
+        <div class="campo">
+          <label for="r-valor">Lo que vale de media una cita <output id="o-valor" for="r-valor">50 €</output></label>
+          <div class="fila-rango"><input type="range" id="r-valor" min="10" max="300" step="5" value="50"><input type="number" id="n-valor" min="0" max="5000" step="1" value="50" aria-label="Valor medio de una cita en euros"></div>
+          <p class="ayuda"><span class="sup">Supuesto, ajústalo.</span> Pon lo que factura de media una primera visita en tu clínica.</p>
+        </div>
+        <div class="campo">
+          <label for="s-tiempo">Cuánto tardas en contestar a un mensaje o formulario</label>
+          <select id="s-tiempo">
+            <option value="0">En menos de 1 hora</option>
+            <option value="0.15">Entre 1 y 4 horas</option>
+            <option value="0.30" selected>Entre 4 y 24 horas</option>
+            <option value="0.50">Más de 24 horas</option>
+          </select>
+          <p class="ayuda"><span class="sup">Cuánto se pierde por tardar es un supuesto prudente nuestro.</span> El estudio que citamos abajo solo prueba la dirección: cuanto antes se contesta, más se convierte.</p>
+        </div>
+        <div class="campo">
+          <label for="r-citas">Citas que tienes agendadas a la semana <output id="o-citas" for="r-citas">40</output></label>
+          <div class="fila-rango"><input type="range" id="r-citas" min="0" max="300" step="1" value="40"><input type="number" id="n-citas" min="0" max="3000" step="1" value="40" aria-label="Citas agendadas a la semana"></div>
+          <p class="ayuda"><span class="sup">Supuesto, ajústalo.</span> Mira tu agenda de una semana normal.</p>
+        </div>
+        <div class="campo">
+          <label for="r-noshow">De esas, cuántas no se presentan <output id="o-noshow" for="r-noshow">10 %</output></label>
+          <div class="fila-rango"><input type="range" id="r-noshow" min="0" max="50" step="1" value="10"><input type="number" id="n-noshow" min="0" max="100" step="1" value="10" aria-label="Porcentaje de citas que no se presentan"></div>
+          <p class="ayuda"><span class="sup">Supuesto prudente.</span> Los estudios en odontología pediátrica dan entre el 7,4 % y el 14,3 % (fuentes abajo); en adultos y otras clínicas puede variar.</p>
+        </div>
+        <div class="campo">
+          <label for="s-confirma">¿Hoy confirmas las citas con un mensaje?</label>
+          <select id="s-confirma"><option value="no" selected>No, o solo a veces</option><option value="si">Sí, a todas</option></select>
+          <p class="ayuda"><span class="sup">Supuesto, ajústalo.</span> Si ya confirmas todas, no contamos ninguna ausencia como recuperable.</p>
+        </div>
+        <details class="avanzado">
+          <summary>Ajustes avanzados</summary>
+          <div class="campo">
+            <label for="r-extra">Citas más al año de un paciente nuevo <output id="o-extra" for="r-extra">2</output></label>
+            <div class="fila-rango"><input type="range" id="r-extra" min="0" max="12" step="1" value="2"></div>
+            <p class="ayuda"><span class="sup">Supuesto prudente.</span> Además de la primera. Pon 0 si solo cuentas la primera visita.</p>
+          </div>
+          <div class="campo">
+            <label for="r-escritos">Qué parte de los contactos llega por escrito <output id="o-escritos" for="r-escritos">40 %</output></label>
+            <div class="fila-rango"><input type="range" id="r-escritos" min="0" max="100" step="5" value="40"></div>
+            <p class="ayuda"><span class="sup">Supuesto prudente.</span> WhatsApp, formulario web o correo. Es la parte a la que afecta el tiempo de respuesta.</p>
+          </div>
+          <div class="campo">
+            <label for="r-vuelven">De los que no consiguen cita, cuántos no vuelven a llamar <output id="o-vuelven" for="r-vuelven">50 %</output></label>
+            <div class="fila-rango"><input type="range" id="r-vuelven" min="0" max="100" step="5" value="50"></div>
+            <p class="ayuda"><span class="sup">Supuesto prudente.</span> Los demás insisten más tarde y no se cuentan como pérdida.</p>
+          </div>
+          <div class="campo">
+            <label for="r-recupera">Qué parte de lo no atendido recuperaría María <output id="o-recupera" for="r-recupera">60 %</output></label>
+            <div class="fila-rango"><input type="range" id="r-recupera" min="0" max="100" step="5" value="60"></div>
+            <p class="ayuda"><span class="sup">Supuesto prudente, no una promesa.</span> Hay quien, aun contestado, no reserva. Pruébala abajo y ajusta.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="resultado" aria-live="polite">
+        <p class="etiqueta" id="etiqueta-perdida">Con valores de ejemplo, pierdes cada mes</p>
+        <div class="cifra" id="perdida">0 €</div>
+        <p class="anual"><b id="perdida-anual">0 €</b> al año con estos números (estimación)</p>
+        <ul class="desglose">
+          <li><span>No atender</span><b id="d-1">0 €</b></li>
+          <li><span>Responder tarde</span><b id="d-2">0 €</b></li>
+          <li><span>Citas que no se presentan</span><b id="d-3">0 €</b></li>
+        </ul>
+        <div class="recupera">
+          <p class="etiqueta">Lo recuperable con María</p>
+          <p class="cifra-2" id="recuperable">0 €</p><p class="anual">al mes, frente a 90 € de cuota</p>
+          <p class="equilibrio" id="equilibrio"></p>
+        </div>
+        <a class="boton" href="#maria">Probar a María ahora</a>
+        <button type="button" class="boton claro" id="abrir-informe">Recibir este informe por correo</button>
+        <form class="informe" id="form-informe" hidden novalidate>
+          <div><label for="i-nombre">Nombre</label><input id="i-nombre" name="name" autocomplete="name" required></div>
+          <div><label for="i-clinica">Clínica</label><input id="i-clinica" name="clinic" autocomplete="organization" required></div>
+          <div><label for="i-email">Correo</label><input id="i-email" name="email" type="email" autocomplete="email" required></div>
+          <div><label for="i-tel">Teléfono</label><input id="i-tel" name="phone" type="tel" autocomplete="tel" inputmode="tel" required></div>
+          <div class="trampa" aria-hidden="true"><label for="i-web">No rellenar</label><input id="i-web" name="website" tabindex="-1" autocomplete="off"></div>
+          <p class="ayuda-priv">Usamos tus datos solo para enviarte el informe y contestarte. Más en la <a href="/legal/privacidad.html">política de privacidad</a>.</p>
+          <button class="boton" type="submit">Enviarme el informe</button>
+          <p class="respuesta" id="i-respuesta" role="status"></p>
+        </form>
+        <details class="formula">
+          <summary>Cómo se calcula, paso a paso</summary>
+          <p><b>No atender</b> = contactos × % no atendidos × % cita nueva × % que no vuelven × valor de un paciente nuevo en su primer año (cita × (1 + citas más al año)) × 52 ÷ 12.</p>
+          <p><b>Responder tarde</b> = contactos atendidos × % por escrito × % cita nueva × pérdida por tardar (0 %, 15 %, 30 % o 50 % según el tiempo) × valor de un paciente nuevo × 52 ÷ 12.</p>
+          <p><b>Citas que no se presentan</b> = citas × % que no se presenta × valor de la cita × 52 ÷ 12.</p>
+          <p><b>Recuperable</b> = no atender × lo que recupera María + responder tarde × 80 % + no-shows × 33 % (solo si hoy no confirmas).</p>
+          <p><b>Coste del primer año</b> = 250 € de alta (incluye el primer mes) + 11 meses × 90 €.</p>
+          <p>Es una estimación con los números que pones tú, no una media del sector ni una promesa de resultado.</p>
+        </details>
+        <details class="formula fuentes">
+          <summary>De dónde salen los supuestos</summary>
+          <ul>
+            <li><b>Contestar rápido.</b> En un estudio de 1,25 millones de contactos de 42 empresas de EE. UU., las que contactaron en la primera hora tuvieron casi 7 veces más probabilidades de hablar con quien decide que las que tardaron una hora más. Es venta online, no clínicas: solo sostiene la dirección. <a href="https://scholarsarchive.byu.edu/facpub/9711" rel="noopener">Oldroyd, McElheran y Elkington, «The Short Life of Online Sales Leads», Harvard Business Review, 2011</a>.</li>
+            <li><b>Citas que no se presentan.</b> 7,4 % de 2.513.376 citas dentales de menores en Helsinki, 2006-2020: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12535098/" rel="noopener">Goswami et al., 2025</a>. 14,3 % en una clínica dental académica de Buffalo, 2018-2023: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12274092/" rel="noopener">de Oliveira et al., 2025</a>. Ambos son odontología pediátrica.</li>
+            <li><b>Confirmar por mensaje.</b> La asistencia pasó del 67,8 % sin recordatorio al 78,6 % con recordatorio por SMS: de ahí el 33 % menos de ausencias (de 32,2 % a 21,4 %). Es el efecto medido con SMS de recordatorio y sobre una base de ausencias del 32 %; en tu clínica puede ser menor. <a href="https://pubmed.ncbi.nlm.nih.gov/24310741/" rel="noopener">Revisión Cochrane, «Mobile phone messaging reminders for attendance at healthcare appointments», 2013</a>.</li>
+            <li><b>El resto</b> (llamadas no atendidas, citas nuevas, pérdida por tardar, lo que recupera María) son supuestos prudentes nuestros, marcados como tales. No hay un estudio detrás.</li>
+          </ul>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="como" class="como bloque" aria-labelledby="t-como">
+  <div class="envoltura">
+    <div>
+      <h2 id="t-como">Sigues con tu agenda de siempre.</h2>
+      <p class="lead">María lee tus huecos y guarda las citas en el calendario que ya usas. No cambias de herramienta.</p>
+    </div>
+    <ol class="pasos">
+      <li><span class="cuando">Día 1</span><b>Conectamos tu calendario</b><span>En 24 h integramos Cita24 con tu agenda actual: Google Calendar, Outlook o similar.</span></li>
+      <li><span class="cuando">24/7</span><b>María atiende WhatsApp y la web</b><span>Responde dudas, da cita, confirma y cambia citas. Si alguien llama y no le cogéis, le escribe por WhatsApp en 60 segundos.</span></li>
+      <li><span class="cuando">Cada semana</span><b>Ves el resultado en el panel</b><span>Citas recuperadas, no-shows reducidos y conversaciones atendidas. Con eso se mide la garantía.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="bloque denso" aria-labelledby="t-hace">
+  <div class="envoltura">
+    <h2 id="t-hace">Lo que hace María, y lo que no.</h2>
+    <div class="dos">
+      <div class="caja">
+        <h3>Hace</h3>
+        <ul class="lista">
+          <li>Da cita en tu calendario, sin solapes.</li>
+          <li>Confirma, cambia y cancela citas por WhatsApp y en la web.</li>
+          <li>Escribe en 60 segundos a quien llamó fuera de horario.</li>
+          <li>Te manda cada semana lo que ha pasado.</li>
+        </ul>
+        <ul class="especialidades" aria-label="Especialidades">
+          <li>Dental: revisiones, limpiezas, urgencias leves</li>
+          <li>Fisioterapia: sesiones recurrentes y bajas de última hora</li>
+          <li>Podología: tratamientos, órtesis y quiropodia</li>
+        </ul>
+      </div>
+      <div class="caja">
+        <h3>No hace</h3>
+        <ul class="lista no">
+          <li>No ve el historial clínico, diagnósticos ni datos de salud. Solo nombre, teléfono y hueco de agenda.</li>
+          <li>No se activa sin el encargo de tratamiento (RGPD) firmado.</li>
+          <li>No te ata: la cuota mensual no tiene permanencia.</li>
+        </ul>
+        <p style="margin-top:14px">Lo decimos claro: hoy el motor de IA funciona en la nube de un proveedor en Estados Unidos, con cláusulas contractuales tipo. Trabajamos para llevarlo a la UE. <a href="/legal/privacidad.html">Detalle en la política de privacidad</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="precio" class="precio bloque" aria-labelledby="t-precio">
+  <div class="envoltura">
+    <h2 id="t-precio">Un precio, escrito.</h2>
+    <div class="tarifa">
+      <div>
+        <div class="importe">250 € <small>de alta</small></div>
+        <p class="importe-2">Incluye el primer mes. Después, <b>90 €/mes</b>, sin permanencia.</p>
+        <div class="garantia"><b>Garantía del alta</b>Si en los 14 primeros días María no recupera al menos 10 citas, medidas en tu panel, te devolvemos los 250 € del alta. La garantía cubre el alta, no la cuota mensual.</div>
+      </div>
+      <div>
+        <a class="boton teal" id="pagar" href="https://buy.stripe.com/aFadR81wI0P09uTcMZ3ks04" rel="noopener">Reservar mi plaza · 250 €</a>
+        <a class="boton claro" href="#llamada" style="margin-top:10px">Prefiero verlo antes en una llamada</a>
+        <p class="letra">Pago seguro con Stripe y factura por cada cobro. Impuestos no incluidos. Condiciones completas en el <a href="/legal/aviso-legal.html">aviso legal</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bloque" aria-labelledby="t-comprobable">
+  <div class="envoltura">
+    <h2 id="t-comprobable">Lo que puedes comprobar tú, antes de pagar.</h2>
+    <p class="lead">Somos nuevos y no vamos a enseñarte opiniones que no tenemos. Esto sí lo puedes ver por ti mismo.</p>
+    <!-- Prueba social: aquí van testimonios y casos SOLO cuando existan, con nombre, clínica y permiso por escrito. -->
+    <ul class="comprobable">
+      <li><b>La demo está en esta misma página.</b><span>Ponle a María el caso más difícil que te llegue. <span id="demos-texto"></span></span></li>
+      <li><b>La garantía está por escrito.</b><span>10 citas en 14 días o te devolvemos el alta, en las condiciones del aviso legal.</span></li>
+      <li><b>Sin permanencia.</b><span>Si no te sirve, te das de baja antes de la siguiente renovación.</span></li>
+      <li><b>Los datos, explicados antes de firmar.</b><span>El encargo de tratamiento se firma antes de activar nada, y puedes pedir una revisión de los flujos cuando quieras.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="llamada" class="bloque denso" aria-labelledby="t-llamada" style="background:var(--papel-2);border-top:1px solid var(--linea)">
+  <div class="envoltura">
+    <h2 id="t-llamada">¿Prefieres que te lo enseñemos?</h2>
+    <p class="lead">Déjanos tus datos y te enseñamos la demo con tu clínica, sin compromiso.</p>
+    <form class="formulario" id="form-contacto" novalidate>
+      <div class="par">
+        <div><label for="f-nombre">Nombre</label><input id="f-nombre" name="name" autocomplete="name" required></div>
+        <div><label for="f-clinica">Clínica</label><input id="f-clinica" name="clinic" autocomplete="organization" required></div>
+      </div>
+      <div class="par">
+        <div><label for="f-tel">Teléfono</label><input id="f-tel" name="phone" type="tel" autocomplete="tel" inputmode="tel" required></div>
+        <div><label for="f-email">Correo (opcional)</label><input id="f-email" name="email" type="email" autocomplete="email"></div>
+      </div>
+      <div><label for="f-msg">¿Qué te pasa hoy con las citas? (opcional)</label><textarea id="f-msg" name="message"></textarea></div>
+      <div class="trampa" aria-hidden="true"><label for="f-web">No rellenar</label><input id="f-web" name="website" tabindex="-1" autocomplete="off"></div>
+      <div><button class="boton" type="submit">Quiero ver la demo con mi clínica</button></div>
+      <p class="respuesta" id="f-respuesta" role="status"></p>
+      <p class="letra">Usamos tus datos solo para contactarte sobre la demo. <a href="/legal/privacidad.html">Privacidad</a>.</p>
+    </form>
+  </div>
+</section>
+
+<section id="preguntas" class="preguntas bloque" aria-labelledby="t-preguntas">
+  <div class="envoltura">
+    <h2 id="t-preguntas">Preguntas que nos hacen.</h2>
+    <details><summary>¿Tengo que cambiar de agenda?</summary><p>No. Integramos Cita24 con tu calendario actual. Tú sigues usando la misma herramienta; María solo lee huecos y guarda citas.</p></details>
+    <details><summary>¿María ve el historial clínico de mis pacientes?</summary><p>No. Solo usa nombre, teléfono y hueco de agenda. Nunca historial, diagnósticos ni datos de salud. El encargo de tratamiento (RGPD) se firma antes de activar el servicio.</p></details>
+    <details><summary>¿Y si no recupero 10 citas en 14 días?</summary><p>Te devolvemos íntegros los 250 € del alta. La garantía cubre el alta, no la cuota mensual. Se mide en el panel semanal que recibes.</p></details>
+    <details><summary>¿Puedo darme de baja cuando quiera?</summary><p>Sí. La cuota de 90 €/mes no tiene permanencia. Escríbenos antes de la siguiente renovación.</p></details>
+    <details><summary>¿Dónde se procesan los mensajes?</summary><p>Hoy el motor de IA funciona en la nube de un proveedor en Estados Unidos, mediante un encargo de tratamiento con cláusulas contractuales tipo. Trabajamos para ejecutarlo dentro de la UE. Más detalle en la <a href="/legal/privacidad.html">política de privacidad</a>.</p></details>
+  </div>
+</section>
+
+<section class="cierre bloque" aria-labelledby="t-cierre">
+  <div class="envoltura">
+    <h2 id="t-cierre">La próxima llamada que no cojas, que la conteste María.</h2>
+    <p>Pruébala ahora con un caso de tu clínica. Si te convence, la conectamos a tu agenda en 24 h.</p>
+    <div class="acciones">
+      <a class="boton teal" href="#maria">Hablar con María</a>
+      <a class="boton claro" href="#precio">Reservar mi plaza · 250 €</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="pie">
+  <div class="envoltura">
+    <nav aria-label="Legal">
+      <a href="/legal/aviso-legal.html">Aviso legal</a>
+      <a href="/legal/privacidad.html">Privacidad</a>
+      <a href="/legal/cookies.html">Cookies</a>
+      <a href="/baja.html">Darse de baja</a>
+      <a href="/recursos/aviso-legal-y-rgpd-en-la-web-de-tu-clinica.html">Guía: qué exige la ley a la web de tu clínica</a>
+    </nav>
+    <p>Sin cookies de seguimiento: solo el almacenamiento técnico de la demo. <a href="/legal/cookies.html">Qué se guarda y por qué</a>.</p>
+    <p id="pie-contacto"></p>
+  </div>
+</footer>
+
+<div class="barra" aria-label="Acciones rápidas">
+  <a class="boton" href="#maria">Probar a María</a>
+  <a class="boton claro" href="#calculadora">Calcular</a>
+</div>
+
+<script>
+/* Configuración: lo único que Cita24 tiene que revisar antes de publicar. */
+const CONFIG = {
+  api: 'https://cita24.tech',                 // misma web: /api/demo-chat, /api/demo-count, /api/contact y /config.json
+  whatsapp: '',            // número con prefijo y sin espacios (p. ej. 34600000000). Vacío = no se muestra WhatsApp.
+  correo: '',              // correo de contacto público. Vacío = no se muestra.
+  cuotaMensual: 90,        // €/mes
+  alta: 250,               // € de alta, con el primer mes incluido
+  recuperaTarde: 0.8,      // supuesto: parte de lo perdido por tardar que recupera responder al instante
+  reduccionNoShow: 0.33    // Cochrane 2013: asistencia 67,8 % → 78,6 % con SMS (ausencias 32,2 % → 21,4 %)
+};
+
+/* ---------- Calculadora ---------- */
+/* Modelo puro: sin DOM, para poder probarlo con casos. Todo en €/mes salvo lo indicado. */
+function modeloCalculadora(e, cfg) {
+  const S = 52 / 12;                                   // semanas por mes
+  const pacienteAnio = e.valor * (1 + e.extra);        // primera cita + citas más al año
+  const noAtendidos = e.contactos * e.pNoAtendidos;
+  const perdNoAtender = noAtendidos * e.pCita * e.pNoVuelven * pacienteAnio * S;
+  const atendidosPorEscrito = e.contactos * (1 - e.pNoAtendidos) * e.pEscritos;
+  const perdTarde = atendidosPorEscrito * e.pCita * e.perdidaPorTardar * pacienteAnio * S;
+  const perdNoShow = e.citas * e.pNoShow * e.valor * S;
+  const total = perdNoAtender + perdTarde + perdNoShow;
+  const rec1 = perdNoAtender * e.pRecupera;
+  const rec2 = perdTarde * cfg.recuperaTarde;
+  const rec3 = e.confirmaHoy ? 0 : perdNoShow * cfg.reduccionNoShow;
+  const recuperable = rec1 + rec2 + rec3;
+  const costeAnio1 = cfg.alta + 11 * cfg.cuotaMensual;  // el alta incluye el primer mes
+  const netoMes = recuperable - cfg.cuotaMensual;
+  const mesesAmortizar = netoMes > 0 ? Math.max(1, Math.ceil((cfg.alta - cfg.cuotaMensual) / netoMes)) : null;
+  return { perdNoAtender, perdTarde, perdNoShow, total, recuperable,
+           costeAnio1, netoAnio1: recuperable * 12 - costeAnio1, mesesAmortizar };
+}
+
+(() => {
+  // useGrouping 'always': en es-ES, sin esto, 1733 sale sin punto de millar.
+  const fmt = new Intl.NumberFormat('es-ES', {style:'currency', currency:'EUR', maximumFractionDigits:0, useGrouping:'always'});
+  const $ = id => document.getElementById(id);
+  const pares = ['contactos','nocogidos','cita','valor','citas','noshow'];
+  const rangos = ['contactos','nocogidos','cita','valor','citas','noshow','extra','escritos','vuelven','recupera'];
+  const pinta = r => r.style.setProperty('--p', ((r.value - r.min) / (r.max - r.min) * 100) + '%');
+  const n = id => {
+    const el = $(id), v = parseFloat(el.value);
+    const max = parseFloat(el.max);
+    const ok = Math.min(Math.max(0, isNaN(v) ? 0 : v), isNaN(max) ? Infinity : max);
+    if (!isNaN(v) && v !== ok) el.value = ok;
+    return ok;
+  };
+  let tocado = false;
+  let anterior = null;
+  function calcular() {
+    const e = {
+      contactos: n('n-contactos'), pNoAtendidos: n('n-nocogidos') / 100,
+      pCita: n('n-cita') / 100, valor: n('n-valor'),
+      perdidaPorTardar: parseFloat($('s-tiempo').value),
+      citas: n('n-citas'), pNoShow: n('n-noshow') / 100,
+      confirmaHoy: $('s-confirma').value === 'si',
+      extra: n('r-extra'), pEscritos: n('r-escritos') / 100,
+      pNoVuelven: n('r-vuelven') / 100, pRecupera: n('r-recupera') / 100
+    };
+    const r = modeloCalculadora(e, CONFIG);
+    $('o-contactos').textContent = e.contactos;
+    $('o-nocogidos').textContent = Math.round(e.pNoAtendidos * 100) + ' %';
+    $('o-cita').textContent = Math.round(e.pCita * 100) + ' %';
+    $('o-valor').textContent = fmt.format(e.valor);
+    $('o-citas').textContent = e.citas;
+    $('o-noshow').textContent = Math.round(e.pNoShow * 100) + ' %';
+    $('o-extra').textContent = e.extra;
+    $('o-escritos').textContent = $('r-escritos').value + ' %';
+    $('o-vuelven').textContent = $('r-vuelven').value + ' %';
+    $('o-recupera').textContent = $('r-recupera').value + ' %';
+    const cifra = $('perdida'), texto = fmt.format(r.total);
+    if (texto !== anterior) { cifra.textContent = texto; cifra.classList.remove('late'); void cifra.offsetWidth; cifra.classList.add('late'); anterior = texto; }
+    $('perdida-anual').textContent = fmt.format(r.total * 12);
+    $('etiqueta-perdida').textContent = tocado ? 'Lo que pierdes cada mes' : 'Con valores de ejemplo, pierdes cada mes';
+    $('mini-cifra').textContent = texto; $('mini-rec').textContent = fmt.format(r.recuperable);
+    $('d-1').textContent = fmt.format(r.perdNoAtender);
+    $('d-2').textContent = fmt.format(r.perdTarde);
+    $('d-3').textContent = fmt.format(r.perdNoShow);
+    $('recuperable').textContent = fmt.format(r.recuperable);
+    const eq = $('equilibrio');
+    if (r.mesesAmortizar === null) {
+      eq.innerHTML = `Con estos números, lo recuperable no llega a cubrir la cuota de ${CONFIG.cuotaMensual} €/mes. Revisa los valores: si son los de tu clínica, Cita24 no te sale a cuenta todavía.`;
+    } else {
+      const m = r.mesesAmortizar;
+      eq.innerHTML = `Primer año (estimación, impuestos no incluidos): pagas <b>${fmt.format(r.costeAnio1)}</b> (${CONFIG.alta} € de alta con el primer mes y ${CONFIG.cuotaMensual} €/mes después) y recuperas <b>${fmt.format(r.recuperable * 12)}</b>. Resultado: <b>${r.netoAnio1 >= 0 ? '+' : '−'}${fmt.format(Math.abs(r.netoAnio1))}</b>. La inversión se amortiza en <b>${m} ${m === 1 ? 'mes' : 'meses'}</b>.`;
+    }
+    window.__ultimoCalculo = {entradas: e, salidas: r};
+    rangos.forEach(k => pinta($('r-' + k)));
+  }
+  pares.forEach(k => {
+    const r = $('r-' + k), i = $('n-' + k);
+    r.addEventListener('input', () => { i.value = r.value; calcular(); });
+    i.addEventListener('input', () => { const v = parseFloat(i.value); if (!isNaN(v)) r.value = Math.min(Math.max(v, r.min), r.max); calcular(); });
+  });
+  ['extra','escritos','vuelven','recupera'].forEach(k => $('r-' + k).addEventListener('input', calcular));
+  ['s-tiempo','s-confirma'].forEach(id => $(id).addEventListener('change', calcular));
+  document.querySelector('.calc').addEventListener('input', () => { tocado = true; });
+  document.querySelector('.calc').addEventListener('change', () => { tocado = true; });
+  calcular();
+
+  /* Informe por correo: va al mismo /api/contact que el formulario, con los números dentro del mensaje. */
+  const form = $('form-informe'), out = $('i-respuesta');
+  $('abrir-informe').addEventListener('click', () => { form.hidden = false; $('i-nombre').focus(); });
+  form.addEventListener('submit', async ev => {
+    ev.preventDefault(); out.className = 'respuesta'; out.textContent = '';
+    const d = Object.fromEntries(new FormData(form));
+    if (d.website) { form.reset(); return; }
+    if (!d.name.trim() || !d.clinic.trim() || !d.phone.trim() || !/^\S+@\S+\.\S+$/.test(d.email.trim())) {
+      out.textContent = 'Falta tu nombre, la clínica, un correo válido o el teléfono.'; out.classList.add('error'); return;
+    }
+    const {entradas: e, salidas: s} = window.__ultimoCalculo;
+    const mensaje = `INFORME DE LA CALCULADORA (pide el informe por correo). Pérdida al mes: ${Math.round(s.total)} € `
+      + `(no atender ${Math.round(s.perdNoAtender)} €, responder tarde ${Math.round(s.perdTarde)} €, no-shows ${Math.round(s.perdNoShow)} €). `
+      + `Recuperable al mes: ${Math.round(s.recuperable)} €. Entradas: ${e.contactos} contactos/semana, ${Math.round(e.pNoAtendidos*100)} % no atendidos, `
+      + `${Math.round(e.pCita*100)} % cita nueva, cita ${e.valor} €, ${e.citas} citas/semana, ${Math.round(e.pNoShow*100)} % no-show, `
+      + `confirma hoy: ${e.confirmaHoy ? 'sí' : 'no'}, pérdida por tardar en escritos ${Math.round(e.perdidaPorTardar*100)} %, `
+      + `${e.extra} citas más/año, ${Math.round(e.pEscritos*100)} % por escrito, ${Math.round(e.pNoVuelven*100)} % no vuelven, María recupera ${Math.round(e.pRecupera*100)} %. `
+      + `Primer año: coste ${Math.round(s.costeAnio1)} €, resultado ${Math.round(s.netoAnio1)} €, amortiza en ${s.mesesAmortizar === null ? 'no se amortiza' : s.mesesAmortizar + ' meses'}.`;
+    const boton = form.querySelector('button'); boton.disabled = true;
+    try {
+      const r = await fetch(CONFIG.api + '/api/contact', {method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({name:d.name, clinic:d.clinic, phone:d.phone, email:d.email, message:mensaje, source:'web-calculadora'})});
+      if (!r.ok) throw new Error();
+      out.textContent = 'Hemos recibido tu petición del informe. Te lo enviamos a ' + d.email + '.'; out.classList.add('ok'); form.reset();
+    } catch {
+      out.textContent = 'No se ha podido enviar ahora. Vuelve a intentarlo en un momento.'; out.classList.add('error');
+    } finally { boton.disabled = false; }
+  });
+})();
+
+/* ---------- Demo de María ---------- */
+(() => {
+  const $ = id => document.getElementById(id);
+  const caja = $('mensajes'), entrada = $('chat-entrada'), form = $('chat-form');
+  const historial = [];
+  let sesion = null;
+  try { sesion = localStorage.getItem('cita24_demo_session'); if (!sesion) { sesion = crypto.randomUUID(); localStorage.setItem('cita24_demo_session', sesion); } } catch { sesion = String(Date.now()); }
+  const pon = (clase, texto) => { const d = document.createElement('div'); d.className = 'msg ' + clase; d.textContent = texto; caja.appendChild(d); caja.scrollTop = caja.scrollHeight; return d; };
+  const botones = () => document.querySelectorAll('#chat-form button, #escenarios button');
+  let ocupado = false, aviso = null;
+  function disponible() {
+    $('estado').classList.remove('off'); $('estado-texto').textContent = 'Demo en vivo';
+    if (aviso) { aviso.remove(); aviso = null; }
+  }
+  function noDisponible() {
+    $('estado').classList.add('off'); $('estado-texto').textContent = 'Demo no disponible ahora';
+    if (aviso) aviso.remove();
+    const d = aviso = pon('nota', '');
+    d.append('María no está disponible en este momento. ');
+    const a = document.createElement('a'); a.href = '#llamada'; a.textContent = 'Déjanos tu teléfono y te la enseñamos en una llamada';
+    d.append(a, '.');
+  }
+  async function enviar(texto) {
+    texto = texto.trim(); if (!texto || ocupado) return;
+    ocupado = true; botones().forEach(x => x.disabled = true);
+    const mio = pon('paciente', texto); historial.push({role:'user', content:texto});
+    entrada.value = ''; entrada.disabled = true;
+    const esc = pon('maria escribiendo', 'María está escribiendo…');
+    const t0 = performance.now();
+    try {
+      const r = await fetch(CONFIG.api + '/api/demo-chat', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({session_id: sesion, messages: historial})});
+      if (!r.ok) throw new Error('http');
+      const d = await r.json();
+      if (!d.reply) throw new Error('vacío');
+      esc.remove(); disponible(); pon('maria', d.reply); historial.push({role:'assistant', content:d.reply});
+      $('tiempo').textContent = Math.max(1, Math.round((performance.now() - t0) / 1000)) + ' s';
+      contador();
+    } catch (e) {
+      // Nunca se enseña al visitante el error técnico del proveedor.
+      esc.remove(); historial.pop(); mio.remove(); entrada.value = texto; noDisponible();
+    } finally { ocupado = false; entrada.disabled = false; botones().forEach(x => x.disabled = false); }
+  }
+  form.addEventListener('submit', e => { e.preventDefault(); enviar(entrada.value); });
+  $('escenarios').addEventListener('click', e => { const b = e.target.closest('button'); if (b) enviar(b.dataset.texto); });
+  async function contador() {
+    try {
+      const r = await fetch(CONFIG.api + '/api/demo-count'); if (!r.ok) return;
+      const d = await r.json();
+      if (typeof d.hoy === 'number') {
+        $('demos-hoy').textContent = d.hoy;
+        $('demos-texto').innerHTML = `Hoy la han probado <span class="directo">${d.hoy}</span> ${d.hoy === 1 ? 'vez' : 'veces'} (dato en directo).`;
+      }
+    } catch {}
+  }
+  contador();
+})();
+
+/* ---------- Pago y contacto desde /config.json y CONFIG ---------- */
+(() => {
+  fetch(CONFIG.api + '/config.json').then(r => r.ok ? r.json() : null).then(c => {
+    if (c && c.payment_url) document.getElementById('pagar').href = c.payment_url;
+  }).catch(() => {});
+  const pie = document.getElementById('pie-contacto');
+  const partes = [];
+  if (CONFIG.correo) partes.push(`<a href="mailto:${CONFIG.correo}">${CONFIG.correo}</a>`);
+  if (CONFIG.whatsapp) partes.push(`<a href="https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent('Hola, quiero ver la demo de Cita24 para mi clínica')}" rel="noopener">WhatsApp</a>`);
+  if (partes.length) pie.innerHTML = 'Contacto: ' + partes.join(' · ');
+})();
+
+/* ---------- Formulario ---------- */
+(() => {
+  const form = document.getElementById('form-contacto'), out = document.getElementById('f-respuesta');
+  form.addEventListener('submit', async e => {
+    e.preventDefault(); out.className = 'respuesta'; out.textContent = '';
+    const d = Object.fromEntries(new FormData(form));
+    if (d.website) { form.reset(); return; }
+    if (!d.name.trim() || !d.clinic.trim() || !d.phone.trim()) { out.textContent = 'Falta tu nombre, la clínica o el teléfono.'; out.classList.add('error'); return; }
+    const boton = form.querySelector('button'); boton.disabled = true;
+    try {
+      const r = await fetch(CONFIG.api + '/api/contact', {method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({name:d.name, clinic:d.clinic, phone:d.phone, email:d.email, message:d.message, source:'web-contact'})});
+      if (!r.ok) throw new Error();
+      out.textContent = 'Recibido. Te contactamos en menos de 24 horas.'; out.classList.add('ok'); form.reset();
+    } catch {
+      out.textContent = 'No se ha podido enviar ahora. Vuelve a intentarlo en un momento.'; out.classList.add('error');
+    } finally { boton.disabled = false; }
+  });
+})();
+</script>
+</body>
+</html>
